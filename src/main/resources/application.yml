@@ -1,0 +1,28 @@
+server:
+  port: 8888
+spring:
+  jackson:
+    serialization:
+      fail-on-empty-beans: false
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: ENC(G79GY1lpK1do/gTypMlnNZ4yWJd+LOEVMZjImNNQZoU5M15TO+aTuY5SvMzNhrkXx6qaAUyW+Z7onTeCCnoJSEt3NenegNPFAWQxkpKFqlfQiw0p0YkH9Q==)
+    username: ENC(pLZaXF4m1kL40oqEqgRewCKvd9drhRY7)
+    password: ENC(mD2s3Ek7BqxhitcQAWaH/w9jL4udf0s5)
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        #        show_sql: true
+        format_sql: true
+
+jasypt:
+  encryptor:
+    bean: jasyptStringEncryptor
+    password: ${JASYPT_ENCRYPTOR_PASSWORD}
+
+logging.level:
+  org.hibernate.SQL: debug
+#  org.hibernate.type: trace
