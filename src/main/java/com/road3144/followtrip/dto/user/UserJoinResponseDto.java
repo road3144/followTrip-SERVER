@@ -1,0 +1,28 @@
+package com.road3144.followtrip.dto.user;
+
+import com.road3144.followtrip.domain.User;
+import lombok.Builder;
+
+public class UserJoinResponseDto {
+
+    private Long id;
+
+    private String username;
+
+    private String name;
+
+    @Builder
+    public UserJoinResponseDto(Long id, String username, String name) {
+        this.id = id;
+        this.username = username;
+        this.name = name;
+    }
+
+    public static UserJoinResponseDto from(User user) {
+        return UserJoinResponseDto.builder()
+                .id(user.getId())
+                .username(user.getUsername())
+                .name(user.getName())
+                .build();
+    }
+}
