@@ -26,3 +26,8 @@ jasypt:
 logging.level:
   org.hibernate.SQL: debug
 #  org.hibernate.type: trace
+
+app:
+  auth:
+    tokenSecret: ENC(0wJszk3UFF6urPsR7gWNOkxMMsReKlE50/vIAWwIbLc=)
+    tokenExpirationMsec: 864000000

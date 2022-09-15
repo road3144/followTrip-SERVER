@@ -9,6 +9,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 @Entity
 @Getter
@@ -20,6 +23,8 @@ public class User {
     private Long id;
 
     private String username;
+
+    private String roles;
 
     private String password;
 
@@ -38,4 +43,11 @@ public class User {
     private String informAgree;
 
     private String marketingAgree;
+
+    public List<String> getRoleList() {
+        if (this.roles.length() > 0) {
+            return Arrays.asList(this.roles.split(","));
+        }
+        return new ArrayList<>();
+    }
 }

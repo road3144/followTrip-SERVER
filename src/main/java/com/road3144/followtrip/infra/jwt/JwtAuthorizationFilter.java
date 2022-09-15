@@ -1,0 +1,57 @@
+package com.road3144.followtrip.infra.jwt;
+
+import com.road3144.followtrip.infra.config.AppProperties;
+import com.road3144.followtrip.repository.UserRepository;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
+
+import javax.servlet.FilterChain;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+
+@Slf4j
+public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
+
+    private final UserRepository userRepository;
+
+    private final AppProperties appProperties;
+
+    private final JwtTokenProvider tokenProvider;
+
+    public JwtAuthorizationFilter(AuthenticationManager authenticationManager, UserRepository userRepository, AppProperties appProperties, JwtTokenProvider tokenProvider) {
+        super(authenticationManager);
+        this.userRepository = userRepository;
+        this.appProperties = appProperties;
+        this.tokenProvider = tokenProvider;
+    }
+
+    @Override
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
+        log.info("인증이나 권한이 필요한 주고 요청이 됨");
+        String jwtHeader = request.getHeader("Authorization");
+        if (jwtHeader == null || !jwtHeader.startsWith("Bearer")) {
+            chain.doFilter(request, response);
+            return;
+        }
+
+        String jwtToken = request.getHeader("Authorization").replace("Bearer ", "");
+        String username = tokenProvider.getUsernameFromToken(jwtToken);
+
+        if (username != null) {
+            PrincipalDetails principalDetails = userRepository.findByUsername(username)
+                    .map(PrincipalDetails::new)
+                    .orElse(null);
+
+            Authentication authentication =
+                    new UsernamePasswordAuthenticationToken(principalDetails, null, principalDetails.getAuthorities());
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+        }
+        chain.doFilter(request, response);
+    }
+}
