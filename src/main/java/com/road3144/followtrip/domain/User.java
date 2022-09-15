@@ -1,5 +1,6 @@
 package com.road3144.followtrip.domain;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -38,11 +39,26 @@ public class User {
 
     private Integer point;
 
-    private String memAgree;
+    private Integer memAgree;
 
-    private String informAgree;
+    private Integer informAgree;
 
-    private String marketingAgree;
+    private Integer marketingAgree;
+
+    @Builder
+    public User(String username, String roles, String password, String name, LocalDate birth, String tel, String address, Integer point, Integer memAgree, Integer informAgree, Integer marketingAgree) {
+        this.username = username;
+        this.roles = roles;
+        this.password = password;
+        this.name = name;
+        this.birth = birth;
+        this.tel = tel;
+        this.address = address;
+        this.point = point;
+        this.memAgree = memAgree;
+        this.informAgree = informAgree;
+        this.marketingAgree = marketingAgree;
+    }
 
     public List<String> getRoleList() {
         if (this.roles.length() > 0) {
