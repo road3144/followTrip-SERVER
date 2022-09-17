@@ -2,7 +2,11 @@ package com.road3144.followtrip.dto.user;
 
 import com.road3144.followtrip.domain.User;
 import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
+@Getter
+@NoArgsConstructor
 public class UserJoinResponseDto {
 
     private Long id;
