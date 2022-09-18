@@ -1,5 +1,6 @@
 package com.road3144.followtrip.domain;
 
+import com.road3144.followtrip.dto.user.UserUpdateRequestDto;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -65,5 +66,16 @@ public class User {
             return Arrays.asList(this.roles.split(","));
         }
         return new ArrayList<>();
+    }
+
+    public void update(UserUpdateRequestDto req) {
+        this.password = req.getPassword();
+        this.name = req.getName();
+        this.birth = req.getBirth();
+        this.tel = req.getTel();
+        this.address = req.getAddress();
+        this.memAgree = req.getMemAgree();
+        this.informAgree = req.getInformAgree();
+        this.marketingAgree = req.getMarketingAgree();
     }
 }

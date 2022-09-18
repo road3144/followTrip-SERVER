@@ -3,6 +3,9 @@ package com.road3144.followtrip.service;
 import com.road3144.followtrip.domain.User;
 import com.road3144.followtrip.dto.user.UserJoinRequestDto;
 import com.road3144.followtrip.dto.user.UserJoinResponseDto;
+import com.road3144.followtrip.dto.user.UserUpdateRequestDto;
+import com.road3144.followtrip.dto.user.UserUpdateResponseDto;
+import com.road3144.followtrip.exception.EntityNotFoundException;
 import com.road3144.followtrip.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -34,6 +37,15 @@ public class UserService {
                 .build();
         userRepository.save(user);
         return UserJoinResponseDto.from(user);
+    }
+
+    public UserUpdateResponseDto update(String username, UserUpdateRequestDto req) {
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(EntityNotFoundException::new);
+        req.setPassword(passwordEncoder.encode(req.getPassword()));
+        user.update(req);
+        userRepository.save(user);
+        return UserUpdateResponseDto.from("updated");
     }
 
 }
