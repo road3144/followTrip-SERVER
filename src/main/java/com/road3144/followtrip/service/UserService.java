@@ -25,7 +25,7 @@ public class UserService {
                 .name(req.getName())
                 .birth(req.getBirth())
                 .tel(req.getTel())
-                .address(req.getTel())
+                .address(req.getAddress())
                 .roles("ROLE_USER")
                 .point(0)
                 .memAgree(req.getMemAgree())
