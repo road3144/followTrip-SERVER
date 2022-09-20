@@ -1,5 +1,6 @@
 package com.road3144.followtrip.domain;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -29,4 +30,11 @@ public class Item {
     private String name;
 
     private Integer price;
+
+    @Builder
+    public Item(Plan plan, String name, Integer price) {
+        this.plan = plan;
+        this.name = name;
+        this.price = price;
+    }
 }
