@@ -13,6 +13,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,6 +34,12 @@ public class Schedule {
     @OneToMany(mappedBy = "schedule")
     private List<Plan> plans = new ArrayList<>();
 
+    @OneToMany(mappedBy = "schedule")
+    private List<Tag> tags = new ArrayList<>();
+
+    @OneToOne(mappedBy = "schedule")
+    private Image thumbnail;
+
     private String name;
 
     private String region;
@@ -41,13 +48,18 @@ public class Schedule {
 
     private String description;
 
+    private Integer isGuide;
+
     @Builder
-    public Schedule(User user, List<Plan> plans, String name, String region, Integer pointPrice, String description) {
+    public Schedule(User user, List<Plan> plans, List<Tag> tags, Image thumbnail , String name, String region, Integer pointPrice, String description, Integer isGuide) {
         this.user = user;
         this.plans = plans;
+        this.tags = tags;
+        this.thumbnail = thumbnail;
         this.name = name;
         this.region = region;
         this.pointPrice = pointPrice;
         this.description = description;
+        this.isGuide = isGuide;
     }
 }

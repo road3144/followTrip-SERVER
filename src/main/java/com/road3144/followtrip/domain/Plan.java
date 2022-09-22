@@ -33,6 +33,9 @@ public class Plan {
     @OneToMany(mappedBy = "plan")
     private List<Item> items = new ArrayList<>();
 
+    @OneToMany(mappedBy = "plan")
+    private List<Image> images = new ArrayList<>();
+
     private Integer planOrder;
 
     private String category;
