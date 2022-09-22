@@ -1,5 +1,6 @@
 package com.road3144.followtrip.domain;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -32,6 +33,13 @@ public class Review {
 
     private String context;
 
-    private double grade;
+    private Double grade;
 
+    @Builder
+    public Review(User user, Schedule schedule, String context, Double grade) {
+        this.user = user;
+        this.schedule = schedule;
+        this.context = context;
+        this.grade = grade;
+    }
 }
