@@ -40,6 +40,9 @@ public class Schedule {
     @OneToOne(mappedBy = "schedule")
     private Image thumbnail;
 
+    @OneToMany(mappedBy = "schedule")
+    private List<Review> reviews;
+
     private String name;
 
     private String region;

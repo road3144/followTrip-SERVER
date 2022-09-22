@@ -1,5 +1,6 @@
 package com.road3144.followtrip.domain;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -15,7 +16,7 @@ import javax.persistence.ManyToOne;
 @Entity
 @Getter
 @NoArgsConstructor
-public class BUY {
+public class Buy {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,4 +30,10 @@ public class BUY {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "schedule_id")
     private Schedule schedule;
+
+    @Builder
+    public Buy(User user, Schedule schedule) {
+        this.user = user;
+        this.schedule = schedule;
+    }
 }
