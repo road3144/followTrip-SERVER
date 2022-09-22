@@ -10,6 +10,9 @@ import com.road3144.followtrip.dto.item.ItemInsertRequestDto;
 import com.road3144.followtrip.dto.plan.PlanInsertRequestDto;
 import com.road3144.followtrip.dto.schedule.ScheduleInsertRequestDto;
 import com.road3144.followtrip.dto.schedule.ScheduleInsertResponseDto;
+import com.road3144.followtrip.dto.schedule.ScheduleListElementDto;
+import com.road3144.followtrip.dto.schedule.ScheduleListRequestDto;
+import com.road3144.followtrip.dto.schedule.ScheduleListResponseDto;
 import com.road3144.followtrip.exception.EntityNotFoundException;
 import com.road3144.followtrip.infra.FileHandler;
 import com.road3144.followtrip.repository.HashRepository;
@@ -25,6 +28,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -48,6 +52,18 @@ public class ScheduleService {
 
     private final FileHandler fileHandler;
 
+    public ScheduleListResponseDto search(ScheduleListRequestDto req) {
+        List<Schedule> schedules = scheduleRepository.getScheduleList(req);
+        List<ScheduleListElementDto> scheduleElements = new ArrayList<>();
+        for (Schedule schedule : schedules) {
+            List<String> hashes = new ArrayList<>();
+            schedule.getTags().forEach(tag -> hashes.add(tag.getHash().getName()));
+            ScheduleListElementDto scheduleElement = ScheduleListElementDto.from(schedule, hashes);
+            scheduleElements.add(scheduleElement);
+        }
+        return ScheduleListResponseDto.from(scheduleElements);
+    }
+
     @Transactional
     public ScheduleInsertResponseDto insert(String username, ScheduleInsertRequestDto req, List<MultipartFile> multipartFiles, MultipartFile thumbnail) {
         User user = userRepository.findByUsername(username)
@@ -59,6 +75,7 @@ public class ScheduleService {
                 .pointPrice(300)
                 .description(req.getDescription())
                 .isGuide(req.getIsGuide())
+                .totalPrice(req.getTotalPrice())
                 .build();
 
         scheduleRepository.save(schedule);
@@ -85,6 +102,7 @@ public class ScheduleService {
                     .category(reqPlan.getCategory())
                     .planOrder(reqPlan.getPlanOrder())
                     .description(reqPlan.getDescription())
+                    .sumItemPrice(reqPlan.getSumItemPrice())
                     .schedule(schedule)
                     .build();
             planRepository.save(plan);

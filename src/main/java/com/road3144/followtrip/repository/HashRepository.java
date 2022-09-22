@@ -7,4 +7,5 @@ import java.util.Optional;
 
 public interface HashRepository extends JpaRepository<Hash, Long> {
     Optional<Hash> findByName(String name);
+
 }

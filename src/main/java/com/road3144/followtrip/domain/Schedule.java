@@ -53,8 +53,10 @@ public class Schedule {
 
     private Integer isGuide;
 
+    private Integer totalPrice;
+
     @Builder
-    public Schedule(User user, List<Plan> plans, List<Tag> tags, Image thumbnail , String name, String region, Integer pointPrice, String description, Integer isGuide) {
+    public Schedule(User user, List<Plan> plans, List<Tag> tags, Image thumbnail , String name, String region, Integer pointPrice, String description, Integer isGuide, Integer totalPrice) {
         this.user = user;
         this.plans = plans;
         this.tags = tags;
@@ -64,5 +66,6 @@ public class Schedule {
         this.pointPrice = pointPrice;
         this.description = description;
         this.isGuide = isGuide;
+        this.totalPrice = totalPrice;
     }
 }
