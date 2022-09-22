@@ -2,6 +2,7 @@ package com.road3144.followtrip.repository;
 
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import com.road3144.followtrip.domain.QBuy;
 import com.road3144.followtrip.domain.QHash;
 import com.road3144.followtrip.domain.QSchedule;
 import com.road3144.followtrip.domain.QTag;
@@ -20,10 +21,10 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom{
     QSchedule schedule = QSchedule.schedule;
     QTag tag = QTag.tag;
     QHash hash = QHash.hash;
+    QBuy buy = QBuy.buy;
 
     @Override
     public List<Schedule> getScheduleList(ScheduleListRequestDto req) {
-
         return queryFactory
                 .select(schedule)
                 .from(schedule)
@@ -34,6 +35,19 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom{
                 .where(regionEq(req.getRegion()))
                 .where(wordLike(req.getWord()))
                 .where(hashEq(req.getHashes()))
+                .distinct()
+                .fetch();
+    }
+
+    @Override
+    public List<Schedule> getScheduleTop() {
+        return queryFactory
+                .select(buy.schedule)
+                .from(buy)
+                .rightJoin(buy.schedule, schedule)
+                .groupBy(buy.schedule)
+                .orderBy(buy.schedule.count().desc())
+                .limit(1)
                 .distinct()
                 .fetch();
     }

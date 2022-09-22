@@ -6,6 +6,7 @@ import com.road3144.followtrip.dto.schedule.ScheduleInsertRequestDto;
 import com.road3144.followtrip.dto.schedule.ScheduleInsertResponseDto;
 import com.road3144.followtrip.dto.schedule.ScheduleListRequestDto;
 import com.road3144.followtrip.dto.schedule.ScheduleListResponseDto;
+import com.road3144.followtrip.dto.schedule.ScheduleTopResponseDto;
 import com.road3144.followtrip.infra.ApiResponse;
 import com.road3144.followtrip.infra.jwt.PrincipalDetails;
 import com.road3144.followtrip.service.ScheduleService;
@@ -41,5 +42,10 @@ public class ScheduleController {
     @GetMapping("/search")
     public ApiResponse<ScheduleListResponseDto> search(@RequestBody ScheduleListRequestDto req) {
         return ApiResponse.success(HttpStatus.OK, scheduleService.search(req));
+    }
+
+    @GetMapping("/top")
+    public ApiResponse<ScheduleTopResponseDto> top() {
+        return ApiResponse.success(HttpStatus.OK, scheduleService.top());
     }
 }

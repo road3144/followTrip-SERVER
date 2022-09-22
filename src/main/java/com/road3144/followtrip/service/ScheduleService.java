@@ -13,6 +13,7 @@ import com.road3144.followtrip.dto.schedule.ScheduleInsertResponseDto;
 import com.road3144.followtrip.dto.schedule.ScheduleListElementDto;
 import com.road3144.followtrip.dto.schedule.ScheduleListRequestDto;
 import com.road3144.followtrip.dto.schedule.ScheduleListResponseDto;
+import com.road3144.followtrip.dto.schedule.ScheduleTopResponseDto;
 import com.road3144.followtrip.exception.EntityNotFoundException;
 import com.road3144.followtrip.infra.FileHandler;
 import com.road3144.followtrip.repository.HashRepository;
@@ -51,6 +52,18 @@ public class ScheduleService {
     private final HashRepository hashRepository;
 
     private final FileHandler fileHandler;
+
+    public ScheduleTopResponseDto top() {
+        List<Schedule> schedules = scheduleRepository.getScheduleTop();
+        List<ScheduleListElementDto> scheduleElements = new ArrayList<>();
+        for (Schedule schedule : schedules) {
+            List<String> hashes = new ArrayList<>();
+            schedule.getTags().forEach(tag -> hashes.add(tag.getHash().getName()));
+            ScheduleListElementDto scheduleElement = ScheduleListElementDto.from(schedule, hashes);
+            scheduleElements.add(scheduleElement);
+        }
+        return ScheduleTopResponseDto.from(scheduleElements);
+    }
 
     public ScheduleListResponseDto search(ScheduleListRequestDto req) {
         List<Schedule> schedules = scheduleRepository.getScheduleList(req);

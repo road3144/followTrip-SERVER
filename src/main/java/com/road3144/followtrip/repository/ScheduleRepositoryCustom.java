@@ -7,4 +7,6 @@ import java.util.List;
 
 public interface ScheduleRepositoryCustom {
     List<Schedule> getScheduleList(ScheduleListRequestDto req);
+
+    List<Schedule> getScheduleTop();
 }
