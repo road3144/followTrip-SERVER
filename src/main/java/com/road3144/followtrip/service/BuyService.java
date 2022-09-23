@@ -28,6 +28,8 @@ public class BuyService {
         Schedule schedule = scheduleRepository.findById(req.getScheduleId())
                 .orElseThrow(EntityNotFoundException::new);
 
+        user.deduction(schedule.getPointPrice());
+
         Buy buy = Buy.builder()
                 .schedule(schedule)
                 .user(user)

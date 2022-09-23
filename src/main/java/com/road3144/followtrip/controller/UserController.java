@@ -7,6 +7,7 @@ import com.road3144.followtrip.dto.user.UserUpdateRequestDto;
 import com.road3144.followtrip.dto.user.UserUpdateResponseDto;
 import com.road3144.followtrip.infra.ApiResponse;
 import com.road3144.followtrip.infra.jwt.PrincipalDetails;
+import com.road3144.followtrip.service.ScheduleService;
 import com.road3144.followtrip.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,6 +27,8 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserController {
     private final UserService userService;
 
+    private final ScheduleService scheduleService;
+
     @PostMapping("/join")
     public ApiResponse<UserJoinResponseDto> join(@RequestBody UserJoinRequestDto requestDto) {
         log.info("회원가입 요청");
@@ -34,7 +37,7 @@ public class UserController {
 
     @GetMapping("/user")
     public ApiResponse<UserGetResponseDto> user(@AuthenticationPrincipal PrincipalDetails details) {
-        return ApiResponse.success(HttpStatus.OK, UserGetResponseDto.from(details.getUser()));
+        return ApiResponse.success(HttpStatus.OK, UserGetResponseDto.from(details.getUser(), scheduleService.buyList(details.getUsername())));
     }
 
     @PutMapping("/user/update")

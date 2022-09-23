@@ -2,6 +2,9 @@ package com.road3144.followtrip.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.road3144.followtrip.dto.schedule.ScheduleBuyResponseDto;
+import com.road3144.followtrip.dto.schedule.ScheduleGetRequestDto;
+import com.road3144.followtrip.dto.schedule.ScheduleGetResponseDto;
 import com.road3144.followtrip.dto.schedule.ScheduleInsertRequestDto;
 import com.road3144.followtrip.dto.schedule.ScheduleInsertResponseDto;
 import com.road3144.followtrip.dto.schedule.ScheduleListRequestDto;
@@ -47,5 +50,17 @@ public class ScheduleController {
     @GetMapping("/top")
     public ApiResponse<ScheduleTopResponseDto> top() {
         return ApiResponse.success(HttpStatus.OK, scheduleService.top());
+    }
+
+    @GetMapping("/get")
+    public ApiResponse<ScheduleGetResponseDto> get(
+            @AuthenticationPrincipal PrincipalDetails details,
+            @RequestBody ScheduleGetRequestDto req) {
+        return ApiResponse.success(HttpStatus.OK, scheduleService.get(details.getUsername(), req.getScheduleId()));
+    }
+
+    @GetMapping("/buy")
+    public ApiResponse<ScheduleBuyResponseDto> buy(@RequestBody ScheduleGetRequestDto req) {
+        return ApiResponse.success(HttpStatus.OK, scheduleService.buy(req.getScheduleId()));
     }
 }
