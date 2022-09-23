@@ -30,7 +30,7 @@ public class UserService {
                 .tel(req.getTel())
                 .address(req.getAddress())
                 .roles("ROLE_USER")
-                .point(0)
+                .point(5000)
                 .memAgree(req.getMemAgree())
                 .informAgree(req.getInformAgree())
                 .marketingAgree(req.getMarketingAgree())

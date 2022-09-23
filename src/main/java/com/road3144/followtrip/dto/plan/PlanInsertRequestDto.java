@@ -25,6 +25,10 @@ public class PlanInsertRequestDto {
 
     private String description;
 
+    private String startAt;
+
+    private String endAt;
+
     private Integer sumItemPrice;
 
     private List<ItemInsertRequestDto> items;

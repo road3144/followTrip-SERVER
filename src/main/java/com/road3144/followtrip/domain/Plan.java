@@ -44,16 +44,22 @@ public class Plan {
 
     private String description;
 
+    private String startAt;
+
+    private String endAt;
+
     private Integer sumItemPrice;
 
     @Builder
-    public Plan(Schedule schedule, List<Item> items, Integer planOrder, String category, String name, String description, Integer sumItemPrice) {
+    public Plan(Schedule schedule, List<Item> items, Integer planOrder, String category, String name, String description, String startAt, String endAt, Integer sumItemPrice) {
         this.schedule = schedule;
         this.items = items;
         this.planOrder = planOrder;
         this.category = category;
         this.name = name;
         this.description = description;
+        this.startAt = startAt;
+        this.endAt = endAt;
         this.sumItemPrice = sumItemPrice;
     }
 }

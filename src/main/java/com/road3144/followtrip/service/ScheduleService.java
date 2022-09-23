@@ -6,8 +6,13 @@ import com.road3144.followtrip.domain.Plan;
 import com.road3144.followtrip.domain.Schedule;
 import com.road3144.followtrip.domain.Tag;
 import com.road3144.followtrip.domain.User;
+import com.road3144.followtrip.dto.item.ItemBuyResponseDto;
 import com.road3144.followtrip.dto.item.ItemInsertRequestDto;
+import com.road3144.followtrip.dto.plan.PlanBuyResponseDto;
 import com.road3144.followtrip.dto.plan.PlanInsertRequestDto;
+import com.road3144.followtrip.dto.review.ReviewGetResponseDto;
+import com.road3144.followtrip.dto.schedule.ScheduleBuyResponseDto;
+import com.road3144.followtrip.dto.schedule.ScheduleGetResponseDto;
 import com.road3144.followtrip.dto.schedule.ScheduleInsertRequestDto;
 import com.road3144.followtrip.dto.schedule.ScheduleInsertResponseDto;
 import com.road3144.followtrip.dto.schedule.ScheduleListElementDto;
@@ -16,6 +21,7 @@ import com.road3144.followtrip.dto.schedule.ScheduleListResponseDto;
 import com.road3144.followtrip.dto.schedule.ScheduleTopResponseDto;
 import com.road3144.followtrip.exception.EntityNotFoundException;
 import com.road3144.followtrip.infra.FileHandler;
+import com.road3144.followtrip.repository.BuyRepository;
 import com.road3144.followtrip.repository.HashRepository;
 import com.road3144.followtrip.repository.ImageRepository;
 import com.road3144.followtrip.repository.ItemRepository;
@@ -53,20 +59,71 @@ public class ScheduleService {
 
     private final FileHandler fileHandler;
 
+    private final BuyRepository buyRepository;
+
+    public List<ScheduleListElementDto> buyList(String username) {
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(EntityNotFoundException::new);
+        List<Schedule> schedules = new ArrayList<>();
+        user.getBuys().forEach(buy -> schedules.add(buy.getSchedule()));
+
+        return getScheduleElements(schedules);
+    }
+
+    public ScheduleBuyResponseDto buy(Long scheduleId) {
+        Schedule schedule = scheduleRepository.findById(scheduleId)
+                .orElseThrow(EntityNotFoundException::new);
+
+        List<PlanBuyResponseDto> plans = getPlans(schedule);
+
+        List<String> hashes = new ArrayList<>();
+        schedule.getTags().forEach(tag -> hashes.add(tag.getHash().getName()));
+
+        return ScheduleBuyResponseDto.from(schedule, hashes, plans);
+    }
+
+    private List<PlanBuyResponseDto> getPlans(Schedule schedule) {
+        List<PlanBuyResponseDto> plans = new ArrayList<>();
+        for (Plan plan : schedule.getPlans()) {
+            List<ItemBuyResponseDto> items = new ArrayList<>();
+            plan.getItems().forEach(item -> items.add(ItemBuyResponseDto.from(item)));
+            plans.add(PlanBuyResponseDto.from(plan, items));
+        }
+        return plans;
+    }
+
+    public ScheduleGetResponseDto get(String username, Long scheduleId) {
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(EntityNotFoundException::new);
+        Schedule schedule = scheduleRepository.findById(scheduleId)
+                .orElseThrow(EntityNotFoundException::new);
+
+        List<ReviewGetResponseDto> reviews = new ArrayList<>();
+        schedule.getReviews().forEach(review -> reviews.add(ReviewGetResponseDto.from(review)));
+        List<String> hashes = new ArrayList<>();
+        schedule.getTags().forEach(tag -> hashes.add(tag.getHash().getName()));
+
+        int isBuy = 0;
+        if (buyRepository.findByUserAndSchedule(user, schedule).isPresent()) {
+            isBuy = 1;
+        }
+
+        return ScheduleGetResponseDto.from(schedule, reviews, hashes, isBuy);
+    }
+
     public ScheduleTopResponseDto top() {
         List<Schedule> schedules = scheduleRepository.getScheduleTop();
-        List<ScheduleListElementDto> scheduleElements = new ArrayList<>();
-        for (Schedule schedule : schedules) {
-            List<String> hashes = new ArrayList<>();
-            schedule.getTags().forEach(tag -> hashes.add(tag.getHash().getName()));
-            ScheduleListElementDto scheduleElement = ScheduleListElementDto.from(schedule, hashes);
-            scheduleElements.add(scheduleElement);
-        }
+        List<ScheduleListElementDto> scheduleElements = getScheduleElements(schedules);
         return ScheduleTopResponseDto.from(scheduleElements);
     }
 
     public ScheduleListResponseDto search(ScheduleListRequestDto req) {
         List<Schedule> schedules = scheduleRepository.getScheduleList(req);
+        List<ScheduleListElementDto> scheduleElements = getScheduleElements(schedules);
+        return ScheduleListResponseDto.from(scheduleElements);
+    }
+
+    private List<ScheduleListElementDto> getScheduleElements(List<Schedule> schedules) {
         List<ScheduleListElementDto> scheduleElements = new ArrayList<>();
         for (Schedule schedule : schedules) {
             List<String> hashes = new ArrayList<>();
@@ -74,7 +131,7 @@ public class ScheduleService {
             ScheduleListElementDto scheduleElement = ScheduleListElementDto.from(schedule, hashes);
             scheduleElements.add(scheduleElement);
         }
-        return ScheduleListResponseDto.from(scheduleElements);
+        return scheduleElements;
     }
 
     @Transactional
@@ -115,6 +172,8 @@ public class ScheduleService {
                     .category(reqPlan.getCategory())
                     .planOrder(reqPlan.getPlanOrder())
                     .description(reqPlan.getDescription())
+                    .startAt(reqPlan.getStartAt())
+                    .endAt(reqPlan.getEndAt())
                     .sumItemPrice(reqPlan.getSumItemPrice())
                     .schedule(schedule)
                     .build();

@@ -1,6 +1,7 @@
 package com.road3144.followtrip.domain;
 
 import com.road3144.followtrip.dto.user.UserUpdateRequestDto;
+import com.road3144.followtrip.exception.EntityNotFoundException;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -81,5 +82,12 @@ public class User {
         this.memAgree = req.getMemAgree();
         this.informAgree = req.getInformAgree();
         this.marketingAgree = req.getMarketingAgree();
+    }
+
+    public void deduction(Integer pointPrice) {
+        if (this.point - pointPrice < 0) {
+            throw new EntityNotFoundException();
+        }
+        this.point -= pointPrice;
     }
 }
