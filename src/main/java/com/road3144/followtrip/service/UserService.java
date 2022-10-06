@@ -5,6 +5,8 @@ import com.road3144.followtrip.dto.user.UserJoinRequestDto;
 import com.road3144.followtrip.dto.user.UserJoinResponseDto;
 import com.road3144.followtrip.dto.user.UserUpdateRequestDto;
 import com.road3144.followtrip.dto.user.UserUpdateResponseDto;
+import com.road3144.followtrip.dto.user.UserValidationRequestDto;
+import com.road3144.followtrip.dto.user.UserValidationResponseDto;
 import com.road3144.followtrip.exception.EntityNotFoundException;
 import com.road3144.followtrip.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +22,12 @@ public class UserService {
     private final BCryptPasswordEncoder passwordEncoder;
 
     private final UserRepository userRepository;
+
+    public UserValidationResponseDto isValidate(UserValidationRequestDto req) {
+        return userRepository.findByUsername(req.getUsername())
+                .map(user -> UserValidationResponseDto.from("invalid"))
+                .orElse(UserValidationResponseDto.from("valid"));
+    }
 
     public UserJoinResponseDto signUp(UserJoinRequestDto req) {
         User user = User.builder()

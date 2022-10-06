@@ -20,6 +20,7 @@ public class Hash {
     @Column(name = "hash_id", unique = true)
     private Long id;
 
+    @Column(unique = true)
     private String name;
 
     @Builder

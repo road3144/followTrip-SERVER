@@ -42,7 +42,10 @@ public class Plan {
 
     private String name;
 
+    @Column(columnDefinition = "TEXT")
     private String description;
+
+    private String address;
 
     private String startAt;
 
@@ -51,13 +54,14 @@ public class Plan {
     private Integer sumItemPrice;
 
     @Builder
-    public Plan(Schedule schedule, List<Item> items, Integer planOrder, String category, String name, String description, String startAt, String endAt, Integer sumItemPrice) {
+    public Plan(Schedule schedule, List<Item> items, Integer planOrder, String category, String name, String description, String address, String startAt, String endAt, Integer sumItemPrice) {
         this.schedule = schedule;
         this.items = items;
         this.planOrder = planOrder;
         this.category = category;
         this.name = name;
         this.description = description;
+        this.address = address;
         this.startAt = startAt;
         this.endAt = endAt;
         this.sumItemPrice = sumItemPrice;

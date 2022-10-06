@@ -9,29 +9,53 @@ spring:
     url: ENC(G79GY1lpK1do/gTypMlnNZ4yWJd+LOEVMZjImNNQZoU5M15TO+aTuY5SvMzNhrkXx6qaAUyW+Z7onTeCCnoJSEt3NenegNPFAWQxkpKFqlfQiw0p0YkH9Q==)
     username: ENC(pLZaXF4m1kL40oqEqgRewCKvd9drhRY7)
     password: ENC(mD2s3Ek7BqxhitcQAWaH/w9jL4udf0s5)
+    hikari:
+      maximum-pool-size: 10
+      connection-timeout: 60000
+      connection-init-sql: SELECT 1
+      validation-timeout: 2000
+      minimum-idle: 10
+      idle-timeout: 300000
+      max-lifetime: 360000
   jpa:
     hibernate:
       ddl-auto: update
     properties:
       hibernate:
-        #        show_sql: true
+        show_sql: true
         format_sql: true
   servlet:
     multipart:
       max-file-size: 10MB
       max-request-size: 20MB
 
-
-jasypt:
-  encryptor:
-    bean: jasyptStringEncryptor
-    password: ${JASYPT_ENCRYPTOR_PASSWORD}
-
 logging.level:
   org.hibernate.SQL: debug
 #  org.hibernate.type: trace
+  com:
+    amazonaws:
+      util:
+        EC2MetadataUtils: ERROR
 
 app:
   auth:
     tokenSecret: ENC(0wJszk3UFF6urPsR7gWNOkxMMsReKlE50/vIAWwIbLc=)
     tokenExpirationMsec: 864000000
+
+cloud:
+  aws:
+    s3:
+      bucket: road.3144.bucket
+    credentials:
+      access-key: ENC(g8UlbfRfc6nVAqQl5rR0Y3g5fRj2fncf+LExE6z1AFE=)
+      secret-key: ENC(mmavHckd4K31qDRv+dlzS4U58fxiFybUjWmG4ipSNIjZNwBVU0lQcBby8i6L7IIm3407Z/itOIc=)
+    region:
+      static: ap-northeast-2
+      auto: false
+    stack:
+      auto: false
+
+jasypt:
+  encryptor:
+    bean: jasyptStringEncryptor
+    password: ${JASYPT_ENCRYPTOR_PASSWORD}

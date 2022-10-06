@@ -31,6 +31,7 @@ public class Review {
     @JoinColumn(name = "schedule_id")
     private Schedule schedule;
 
+    @Column(columnDefinition = "TEXT")
     private String context;
 
     private Double grade;

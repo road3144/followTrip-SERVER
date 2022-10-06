@@ -24,16 +24,22 @@ public class ScheduleGetResponseDto {
 
     private Integer isBuy;
 
+    private String region;
+
+    private String thumbnail;
+
     private List<ReviewGetResponseDto> reviews;
 
     @Builder
-    public ScheduleGetResponseDto(Long scheduleId, String name, List<String> hashes, String description, Integer totalPrice, Integer isBuy, List<ReviewGetResponseDto> reviews) {
+    public ScheduleGetResponseDto(Long scheduleId, String name, List<String> hashes, String description, Integer totalPrice, Integer isBuy, String region, String thumbnail, List<ReviewGetResponseDto> reviews) {
         this.scheduleId = scheduleId;
         this.name = name;
         this.hashes = hashes;
         this.description = description;
         this.totalPrice = totalPrice;
         this.isBuy = isBuy;
+        this.region = region;
+        this.thumbnail = thumbnail;
         this.reviews = reviews;
     }
 
@@ -45,6 +51,8 @@ public class ScheduleGetResponseDto {
                 .totalPrice(schedule.getTotalPrice())
                 .reviews(reviews)
                 .isBuy(isBuy)
+                .region(schedule.getRegion())
+                .thumbnail(schedule.getThumbnail().getPath())
                 .hashes(hashes)
                 .build();
     }

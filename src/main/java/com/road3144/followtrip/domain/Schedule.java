@@ -49,6 +49,7 @@ public class Schedule {
 
     private Integer pointPrice;
 
+    @Column(columnDefinition = "TEXT")
     private String description;
 
     private Integer isGuide;

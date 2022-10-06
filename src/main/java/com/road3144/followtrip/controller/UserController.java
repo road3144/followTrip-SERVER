@@ -5,6 +5,8 @@ import com.road3144.followtrip.dto.user.UserJoinRequestDto;
 import com.road3144.followtrip.dto.user.UserJoinResponseDto;
 import com.road3144.followtrip.dto.user.UserUpdateRequestDto;
 import com.road3144.followtrip.dto.user.UserUpdateResponseDto;
+import com.road3144.followtrip.dto.user.UserValidationRequestDto;
+import com.road3144.followtrip.dto.user.UserValidationResponseDto;
 import com.road3144.followtrip.infra.ApiResponse;
 import com.road3144.followtrip.infra.jwt.PrincipalDetails;
 import com.road3144.followtrip.service.ScheduleService;
@@ -43,5 +45,10 @@ public class UserController {
     @PutMapping("/user/update")
     public ApiResponse<UserUpdateResponseDto> update(@AuthenticationPrincipal PrincipalDetails details, @RequestBody UserUpdateRequestDto req) {
         return ApiResponse.success(HttpStatus.OK, userService.update(details.getUsername(), req));
+    }
+
+    @PutMapping("/user/validation")
+    public ApiResponse<UserValidationResponseDto> isValidate(@RequestBody UserValidationRequestDto req) {
+        return ApiResponse.success(HttpStatus.OK, userService.isValidate(req));
     }
 }

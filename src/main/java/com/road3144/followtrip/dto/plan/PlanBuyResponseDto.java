@@ -22,37 +22,45 @@ public class PlanBuyResponseDto {
 
     private String description;
 
+    private String address;
+
     private String startAt;
 
     private String endAt;
 
     private Integer sumItemPrice;
 
+    private List<String> images;
+
     private List<ItemBuyResponseDto> items;
 
     @Builder
-    public PlanBuyResponseDto(Long planId, Integer planOrder, String category, String name, String description, String startAt, String endAt, Integer sumItemPrice, List<ItemBuyResponseDto> items) {
+    public PlanBuyResponseDto(Long planId, Integer planOrder, String category, String name, String description, String address, String startAt, String endAt, Integer sumItemPrice, List<String> images, List<ItemBuyResponseDto> items) {
         this.planId = planId;
         this.planOrder = planOrder;
         this.category = category;
         this.name = name;
         this.description = description;
+        this.address = address;
         this.startAt = startAt;
         this.endAt = endAt;
         this.sumItemPrice = sumItemPrice;
+        this.images = images;
         this.items = items;
     }
 
-    public static PlanBuyResponseDto from(Plan plan, List<ItemBuyResponseDto> items) {
+    public static PlanBuyResponseDto from(Plan plan, List<ItemBuyResponseDto> items, List<String> images) {
         return PlanBuyResponseDto.builder()
                 .planId(plan.getId())
                 .planOrder(plan.getPlanOrder())
                 .category(plan.getCategory())
                 .name(plan.getName())
                 .description(plan.getDescription())
+                .address(plan.getAddress())
                 .startAt(plan.getStartAt())
                 .endAt(plan.getEndAt())
                 .sumItemPrice(plan.getSumItemPrice())
+                .images(images)
                 .items(items)
                 .build();
     }

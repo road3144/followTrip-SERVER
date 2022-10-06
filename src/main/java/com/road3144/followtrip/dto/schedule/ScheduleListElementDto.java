@@ -19,12 +19,18 @@ public class ScheduleListElementDto {
 
     private Integer totalPrice;
 
+    private String region;
+
+    private String thumbnail;
+
     @Builder
-    public ScheduleListElementDto(Long scheduleId, List<String> hashes, String name, Integer totalPrice) {
+    public ScheduleListElementDto(Long scheduleId, List<String> hashes, String name, Integer totalPrice, String region, String thumbnail) {
         this.scheduleId = scheduleId;
         this.hashes = hashes;
         this.name = name;
         this.totalPrice = totalPrice;
+        this.region = region;
+        this.thumbnail = thumbnail;
     }
 
     public static ScheduleListElementDto from(Schedule schedule, List<String> hashes) {
@@ -33,6 +39,8 @@ public class ScheduleListElementDto {
                 .hashes(hashes)
                 .name(schedule.getName())
                 .totalPrice(schedule.getTotalPrice())
+                .region(schedule.getRegion())
+                .thumbnail(schedule.getThumbnail().getPath())
                 .build();
     }
 }

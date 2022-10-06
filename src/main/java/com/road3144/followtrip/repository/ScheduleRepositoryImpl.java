@@ -47,7 +47,7 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom{
                 .rightJoin(buy.schedule, schedule)
                 .groupBy(buy.schedule)
                 .orderBy(buy.schedule.count().desc())
-                .limit(1)
+                .limit(12)
                 .distinct()
                 .fetch();
     }
@@ -63,7 +63,7 @@ public class ScheduleRepositoryImpl implements ScheduleRepositoryCustom{
         if (word.isEmpty()) {
             return null;
         }
-        return schedule.name.like(word);
+        return schedule.name.contains(word);
     }
 
     private BooleanExpression hashEq(List<String> hashes) {

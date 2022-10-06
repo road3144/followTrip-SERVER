@@ -20,7 +20,7 @@ import com.road3144.followtrip.dto.schedule.ScheduleListRequestDto;
 import com.road3144.followtrip.dto.schedule.ScheduleListResponseDto;
 import com.road3144.followtrip.dto.schedule.ScheduleTopResponseDto;
 import com.road3144.followtrip.exception.EntityNotFoundException;
-import com.road3144.followtrip.infra.FileHandler;
+import com.road3144.followtrip.infra.file.FileHandler;
 import com.road3144.followtrip.repository.BuyRepository;
 import com.road3144.followtrip.repository.HashRepository;
 import com.road3144.followtrip.repository.ImageRepository;
@@ -87,14 +87,18 @@ public class ScheduleService {
         for (Plan plan : schedule.getPlans()) {
             List<ItemBuyResponseDto> items = new ArrayList<>();
             plan.getItems().forEach(item -> items.add(ItemBuyResponseDto.from(item)));
-            plans.add(PlanBuyResponseDto.from(plan, items));
+
+            List<String> images = new ArrayList<>();
+            plan.getImages().forEach(image -> images.add(image.getPath()));
+
+            plans.add(PlanBuyResponseDto.from(plan, items, images));
         }
         return plans;
     }
 
     public ScheduleGetResponseDto get(String username, Long scheduleId) {
         User user = userRepository.findByUsername(username)
-                .orElseThrow(EntityNotFoundException::new);
+                .orElse(null);
         Schedule schedule = scheduleRepository.findById(scheduleId)
                 .orElseThrow(EntityNotFoundException::new);
 
@@ -104,7 +108,7 @@ public class ScheduleService {
         schedule.getTags().forEach(tag -> hashes.add(tag.getHash().getName()));
 
         int isBuy = 0;
-        if (buyRepository.findByUserAndSchedule(user, schedule).isPresent()) {
+        if (user != null && buyRepository.findByUserAndSchedule(user, schedule).isPresent()) {
             isBuy = 1;
         }
 
@@ -152,7 +156,7 @@ public class ScheduleService {
         saveTags(req.getHashes(), schedule);
 
         try {
-            imageRepository.save(fileHandler.parseFile(thumbnail));
+            imageRepository.save(fileHandler.parseFile(thumbnail, schedule));
         } catch (Exception e) {
             log.error("파일 입출력 에러");
             log.error(e.getMessage());
@@ -172,6 +176,7 @@ public class ScheduleService {
                     .category(reqPlan.getCategory())
                     .planOrder(reqPlan.getPlanOrder())
                     .description(reqPlan.getDescription())
+                    .address(reqPlan.getAddress())
                     .startAt(reqPlan.getStartAt())
                     .endAt(reqPlan.getEndAt())
                     .sumItemPrice(reqPlan.getSumItemPrice())
@@ -183,10 +188,11 @@ public class ScheduleService {
             lastIndex += reqPlan.getImageCnt();
 
             try {
-                imageRepository.saveAll(fileHandler.parseFiles(thisFiles));
+                imageRepository.saveAll(fileHandler.parseFiles(thisFiles, plan));
             } catch (Exception e) {
                 log.error("파일 입출력 에러");
                 log.error(e.getMessage());
+                throw new RuntimeException();
             }
             saveItems(reqPlan.getItems(), plan);
         }

@@ -1,5 +1,6 @@
 package com.road3144.followtrip.dto.plan;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.road3144.followtrip.dto.item.ItemInsertRequestDto;
@@ -13,6 +14,7 @@ import java.util.List;
 @NoArgsConstructor
 @ToString
 @JsonNaming(PropertyNamingStrategies.LowerCamelCaseStrategy.class)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class PlanInsertRequestDto {
 
     private Integer planOrder;
@@ -24,6 +26,8 @@ public class PlanInsertRequestDto {
     private String name;
 
     private String description;
+
+    private String address;
 
     private String startAt;
 
